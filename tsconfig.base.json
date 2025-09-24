@@ -18,7 +18,9 @@
       "@hotel_manage/config": ["lib/config/src/index.ts"],
       "@hotel_manage/db-access": ["lib/db-access/src/index.ts"],
       "@hotel_manage/logging": ["lib/logging/src/index.ts"],
-      "@hotel_manage/shared-models": ["lib/shared-models/src/index.ts"]
+      "@hotel_manage/scripts": ["scripts/src/index.ts"],
+      "@hotel_manage/shared-models": ["lib/shared-models/src/index.ts"],
+      "@hotel_manage/utils": ["lib/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

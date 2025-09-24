@@ -45,7 +45,14 @@
   # 16. Generate shared-models library
   npx nx generate @nx/js:library shared-models --directory=shared-models
 
+  # 17. Generate utils library
+  npx nx generate @nx/js:library utils --directory=utils
 
+  # 18. Generate scripts library
+  npx nx generate ????
+
+  # Run script that Creates the  Database from Sequelize Models
+  nx run scripts:db:create
 
   Current project structure:
   - ✅ Nx workspace

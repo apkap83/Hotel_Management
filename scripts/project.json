@@ -1,0 +1,37 @@
+{
+  "name": "scripts",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "scripts/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/scripts",
+        "main": "scripts/src/index.ts",
+        "tsConfig": "scripts/tsconfig.lib.json",
+        "assets": ["scripts/*.md"]
+      }
+    },
+    "db:create": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx --tsconfig tsconfig.base.json --env-file .env.development.local scripts/src/lib/DB/create-database.ts"
+      }
+    },
+    "db:alter": {
+      "executor": "nx:run-commands", 
+      "options": {
+        "command": "tsx --tsconfig tsconfig.base.json scripts/src/lib/DB/alter-database.ts"
+      }
+    },
+    "db:sync": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx --tsconfig tsconfig.base.json scripts/src/lib/DB/sync-database.ts"
+      }
+    }
+  }
+}

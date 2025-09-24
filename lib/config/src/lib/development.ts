@@ -1,12 +1,19 @@
 export const developmentConfig = {
   logDirPerEnvironment: 'dev',
 
+  logging: {
+    applicationLoggingLevel: 'info',
+  },
+
+  PasswordComplexityActive: false,
+  MinimumPasswordCharacters: 4,
+
   postgres_b2b_database: {
     host: 'localhost',
     port: 5432,
     db: 'HotelManagement_DB',
     username: 'postgres',
-    schemaName: 'public',
+    schemaName: 'hotel_development',
     debugMode: true,
     minConnections: 3,
     maxConnections: 3,

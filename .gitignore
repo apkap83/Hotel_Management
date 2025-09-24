@@ -18,3 +18,5 @@ out
 logs/
 logs/dev/
 logs/prod/
+
+dist/
