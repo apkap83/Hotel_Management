@@ -1,0 +1,26 @@
+{
+  "name": "db-access",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/db-access/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/db-access",
+        "main": "lib/db-access/src/index.ts",
+        "tsConfig": "lib/db-access/tsconfig.lib.json",
+        "assets": ["lib/db-access/*.md"]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "lib/db-access",
+        "command": "jest --detectOpenHandles"
+      }
+    }
+  }
+}

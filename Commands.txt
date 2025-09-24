@@ -1,0 +1,55 @@
+# 1. Initialize project
+  pnpm init
+
+  # 2. Install Nx
+  pnpm install nx
+
+  # 3. Initialize Nx workspace
+  nx init
+
+  # 4. Install Next.js plugin
+  pnpm install @nx/next
+
+  # 5. Generate Next.js app
+  npx nx generate @nx/next:app hotel-frontend
+
+  # 6. Serve Next.js app
+  npx nx serve hotel-frontend
+
+  # 7. Remove libs folder (after initial mistake)
+  npx nx g @nx/workspace:remove libs
+
+  # 7.1 Add "npmScope": "hotel_manage", in nx.json
+
+  # 8. Generate config library
+  npx nx generate @nx/js:library config --directory=libs/config
+
+  # 9. Generate db-access library
+  npx nx generate @nx/js:library db-access --directory=libs/db-access
+
+  # 10. Install dotenv library
+  pnpm install dotenv
+
+  # 11. Create .env.development.local & env.production.local files
+  
+  # 12. Add .env*.local in .gitignore file
+  
+  # 13. Add "tui": { "enabled": false }, in nx.json
+
+  # 14. Develop db-access library using TDD
+  # Test it with: npx nx test db-access --watch
+
+  # 15. Generate logging library
+  npx nx generate @nx/js:library logging --directory=logging
+
+  # 16. Generate shared-models library
+  npx nx generate @nx/js:library shared-models --directory=shared-models
+
+
+
+  Current project structure:
+  - ✅ Nx workspace
+  - ✅ Next.js app (hotel-frontend)
+  - ✅ Config library (libs/config) with SWC bundler
+  - ✅ Database access library (libs/db-access) with SWC bundler
+  - ✅ Development server running
