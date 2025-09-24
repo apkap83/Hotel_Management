@@ -1,6 +1,4 @@
 export const productionConfig = {
-  logDirPerEnvironment: 'prod',
-
   logging: {
     applicationLoggingLevel: 'info',
   },

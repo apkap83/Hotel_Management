@@ -1,5 +1,4 @@
 export declare const config: {
-    logDirPerEnvironment: string;
     logging: {
         applicationLoggingLevel: string;
     };

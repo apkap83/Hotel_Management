@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import winston, { createLogger, transports } from 'winston';
-import DailyRotateFile = require('winston-daily-rotate-file');
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 import { config } from '@hotel_manage/config';
 import { TransportName } from '@hotel_manage/shared-models';
 
@@ -11,9 +11,28 @@ const { combine, timestamp, json, printf, colorize, align, errors } =
 const env =
   process.env['NODE_ENV'] === 'production' ? 'production' : 'development';
 
-const logDir = config.logDirPerEnvironment;
+// Use logs/dev for development and logs/prod for production
+const logDir = env === 'production' ? 'prod' : 'dev';
 
-const logPath = path.join(process.cwd(), 'logs', logDir);
+// Find the project root by looking for package.json or nx.json
+const findProjectRoot = (): string => {
+  let currentDir = __dirname;
+  
+  while (currentDir !== path.parse(currentDir).root) {
+    if (fs.existsSync(path.join(currentDir, 'nx.json')) || 
+        fs.existsSync(path.join(currentDir, 'package.json'))) {
+      return currentDir;
+    }
+    currentDir = path.dirname(currentDir);
+  }
+  
+  // Fallback to process.cwd() if not found
+  return process.cwd();
+};
+
+// Create the absolute path: <root>/logs/dev or <root>/logs/prod
+const projectRoot = findProjectRoot();
+const logPath = path.join(projectRoot, 'logs', logDir);
 
 // Ensure log directory exists
 if (!fs.existsSync(logPath)) {
@@ -86,7 +105,7 @@ const logger = winston.createLogger({
   format: combine(errors({ stack: true }), timestamp(), json()),
   transports: MyTransports,
   exceptionHandlers: [
-    new winston.transports.DailyRotateFile({
+    new DailyRotateFile({
       level: 'info',
       filename: path.join(logPath, 'exceptions-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
@@ -94,7 +113,7 @@ const logger = winston.createLogger({
     }),
   ],
   rejectionHandlers: [
-    new winston.transports.DailyRotateFile({
+    new DailyRotateFile({
       level: 'info',
       filename: path.join(logPath, 'rejections-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
@@ -194,17 +213,15 @@ const customFormat = winston.format.printf(({ level, message, timestamp }) => {
 
 const sequelizeDBActionsLogger = winston.createLogger({
   level: 'info',
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp(),
-    customFormat
-  ),
   transports: [
     new DailyRotateFile({
       filename: path.join(logPath, 'sequelize-db-actions-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       maxFiles: '14d',
-      format: winston.format.combine(winston.format.timestamp(), customFormat),
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        customFormat
+      ),
     }),
   ],
 });
