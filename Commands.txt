@@ -54,6 +54,11 @@
   # Run script that Creates the  Database from Sequelize Models
   nx run scripts:db:create
 
+  # Generate auth-options library
+  npx nx generate @nx/js:library auth-options --directory=lib/auth-options
+
+
+
   Current project structure:
   - ✅ Nx workspace
   - ✅ Next.js app (hotel-frontend)

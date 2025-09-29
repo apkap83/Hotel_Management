@@ -1,6 +1,7 @@
 export const developmentConfig = {
   logging: {
     applicationLoggingLevel: 'info',
+    maxFiles: '14d',
   },
 
   PasswordComplexityActive: false,

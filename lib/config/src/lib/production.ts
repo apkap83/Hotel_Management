@@ -1,6 +1,7 @@
 export const productionConfig = {
   logging: {
     applicationLoggingLevel: 'info',
+    maxFiles: '14d',
   },
 
   PasswordComplexityActive: false,

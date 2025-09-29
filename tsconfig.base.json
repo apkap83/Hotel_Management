@@ -20,7 +20,8 @@
       "@hotel_manage/logging": ["lib/logging/src/index.ts"],
       "@hotel_manage/scripts": ["scripts/src/index.ts"],
       "@hotel_manage/shared-models": ["lib/shared-models/src/index.ts"],
-      "@hotel_manage/utils": ["lib/utils/src/index.ts"]
+      "@hotel_manage/utils": ["lib/utils/src/index.ts"],
+      "auth-options": ["lib/auth-options/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

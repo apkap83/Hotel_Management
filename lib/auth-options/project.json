@@ -1,0 +1,19 @@
+{
+  "name": "auth-options",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/auth-options/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/auth-options",
+        "main": "lib/auth-options/src/index.ts",
+        "tsConfig": "lib/auth-options/tsconfig.lib.json",
+        "assets": ["lib/auth-options/*.md"]
+      }
+    }
+  }
+}

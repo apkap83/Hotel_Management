@@ -29,7 +29,8 @@
       "configurations": {
         "development": {
           "buildTarget": "hotel-frontend:build:development",
-          "dev": true
+          "dev": true,
+          "turbo": true
         },
         "production": {
           "buildTarget": "hotel-frontend:build:production",

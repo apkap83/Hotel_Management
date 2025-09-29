@@ -1,19 +1,11 @@
-import type { Config } from 'jest';
-import nextJest from 'next/jest.js';
-
-const createJestConfig = nextJest({
-  dir: './',
-});
-
-const config: Config = {
+export default {
   displayName: 'hotel-frontend',
   preset: '../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
+    '^.+\\.[jt]sx?$': ['babel-jest', { presets: ['@nx/next/babel'] }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../coverage/hotel-frontend',
   testEnvironment: 'jsdom',
 };
-
-export default createJestConfig(config);

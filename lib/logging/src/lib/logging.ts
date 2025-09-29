@@ -14,19 +14,24 @@ const env =
 // Use logs/dev for development and logs/prod for production
 const logDir = env === 'production' ? 'prod' : 'dev';
 
-// Find the project root by looking for package.json or nx.json
+// Enhanced project root detection with better error handling
 const findProjectRoot = (): string => {
   let currentDir = __dirname;
-  
-  while (currentDir !== path.parse(currentDir).root) {
-    if (fs.existsSync(path.join(currentDir, 'nx.json')) || 
-        fs.existsSync(path.join(currentDir, 'package.json'))) {
+  const maxDepth = 10; // Prevent infinite loops
+  let depth = 0;
+
+  while (currentDir !== path.parse(currentDir).root && depth < maxDepth) {
+    if (
+      fs.existsSync(path.join(currentDir, 'nx.json')) ||
+      fs.existsSync(path.join(currentDir, 'package.json'))
+    ) {
       return currentDir;
     }
     currentDir = path.dirname(currentDir);
+    depth++;
   }
-  
-  // Fallback to process.cwd() if not found
+
+  console.warn('Project root not found, using process.cwd()');
   return process.cwd();
 };
 
@@ -34,11 +39,36 @@ const findProjectRoot = (): string => {
 const projectRoot = findProjectRoot();
 const logPath = path.join(projectRoot, 'logs', logDir);
 
-// Ensure log directory exists
-if (!fs.existsSync(logPath)) {
-  console.log('Creating log directory at:', logPath);
-  fs.mkdirSync(logPath, { recursive: true });
-}
+// Enhanced log directory creation with better error handling
+const ensureLogDirectory = (path: string): void => {
+  try {
+    if (!fs.existsSync(path)) {
+      console.log('Creating log directory at:', path);
+      fs.mkdirSync(path, { recursive: true });
+    }
+  } catch (error) {
+    console.error('Failed to create log directory:', error);
+    throw error;
+  }
+};
+
+ensureLogDirectory(logPath);
+
+// Configuration object
+const LOG_CONFIG = {
+  maxFiles: config.logging.maxFiles,
+  datePattern: 'YYYY-MM-DD',
+  paths: {
+    auth: path.join(logPath, 'auth-%DATE%.log'),
+    actions: path.join(logPath, 'actions-%DATE%.log'),
+    events: path.join(logPath, 'events-%DATE%.log'),
+    error: path.join(logPath, 'error-%DATE%.log'),
+    combined: path.join(logPath, 'combined-%DATE%.log'),
+    exceptions: path.join(logPath, 'exceptions-%DATE%.log'),
+    rejections: path.join(logPath, 'rejections-%DATE%.log'),
+    sequelize: path.join(logPath, 'sequelize-db-actions-%DATE%.log'),
+  },
+};
 
 const authLogFilePath = path.join(logPath, 'auth-%DATE%.log');
 const actionsLogFilePath = path.join(logPath, 'actions-%DATE%.log');
@@ -53,71 +83,104 @@ const createFilter = (transportName: TransportName) => {
   })();
 };
 
-const MyTransports = [];
+// Enhanced format for better readability in development
+const developmentFormat = combine(
+  colorize({ all: true }),
+  errors({ stack: true }),
+  timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  align(),
+  printf((info) => {
+    const { timestamp, level, message, transportName, ...meta } = info;
+    const metaStr =
+      Object.keys(meta).length > 0 ? `\n${JSON.stringify(meta, null, 2)}` : '';
+    return `[${timestamp}] ${level} [${
+      transportName || 'UNKNOWN'
+    }]: ${message}${metaStr}`;
+  })
+);
 
-if (process.env['NODE_ENV'] !== 'test') {
-  MyTransports.push(
-    new DailyRotateFile({
-      level: 'info',
-      filename: authLogFilePath,
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d',
-      format: combine(createFilter(TransportName.AUTH), json()),
-    }),
-    new DailyRotateFile({
-      level: 'info',
-      filename: actionsLogFilePath,
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d',
-      format: combine(createFilter(TransportName.ACTIONS), json()),
-    }),
-    new DailyRotateFile({
-      level: 'info',
-      filename: eventsLogFilePath,
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d',
-      format: combine(createFilter(TransportName.EVENTS), json()),
-    }),
-    new DailyRotateFile({
-      level: 'error',
-      filename: errorLogFilePath,
-      format: combine(json()),
-    }),
-    new DailyRotateFile({
-      level: 'info',
-      filename: combinedLogFilePath,
-      format: combine(json()),
-    })
-  );
-}
+// Production format optimized for log aggregation
+const productionFormat = combine(timestamp(), errors({ stack: true }), json());
 
-// if (process.env['NODE_ENV'] !== 'production') {
-//   MyTransports.push(
-//     new winston.transports.Console({
-//       format: combine(json()),
-//     })
-//   );
-// }
+const createTransports = () => {
+  const transports: winston.transport[] = [];
+
+  if (process.env['NODE_ENV'] !== 'test') {
+    // File transports
+    transports.push(
+      new DailyRotateFile({
+        level: 'info',
+        filename: LOG_CONFIG.paths.auth,
+        datePattern: LOG_CONFIG.datePattern,
+        maxFiles: LOG_CONFIG.maxFiles,
+        format: combine(createFilter(TransportName.AUTH), productionFormat),
+        auditFile: path.join(logPath, 'audit-auth.json'),
+      }),
+      new DailyRotateFile({
+        level: 'info',
+        filename: LOG_CONFIG.paths.actions,
+        datePattern: LOG_CONFIG.datePattern,
+        maxFiles: LOG_CONFIG.maxFiles,
+        format: combine(createFilter(TransportName.ACTIONS), productionFormat),
+        auditFile: path.join(logPath, 'audit-actions.json'),
+      }),
+      new DailyRotateFile({
+        level: 'info',
+        filename: LOG_CONFIG.paths.events,
+        datePattern: LOG_CONFIG.datePattern,
+        maxFiles: LOG_CONFIG.maxFiles,
+        format: combine(createFilter(TransportName.EVENTS), productionFormat),
+        auditFile: path.join(logPath, 'audit-events.json'),
+      }),
+      new DailyRotateFile({
+        level: 'error',
+        filename: LOG_CONFIG.paths.error,
+        datePattern: LOG_CONFIG.datePattern,
+        maxFiles: LOG_CONFIG.maxFiles,
+        format: productionFormat,
+        auditFile: path.join(logPath, 'audit-error.json'),
+      }),
+      new DailyRotateFile({
+        level: 'info',
+        filename: LOG_CONFIG.paths.combined,
+        datePattern: LOG_CONFIG.datePattern,
+        maxFiles: LOG_CONFIG.maxFiles,
+        format: productionFormat,
+        auditFile: path.join(logPath, 'audit-combined.json'),
+      })
+    );
+  }
+
+  // Console transport for non-production environments
+  if (env !== 'production') {
+    transports.push(
+      new winston.transports.Console({
+        format: developmentFormat,
+      })
+    );
+  }
+
+  return transports;
+};
 
 const logger = winston.createLogger({
-  // level: process.env.LOG_LEVEL || 'info',
   level: config.logging.applicationLoggingLevel,
   format: combine(errors({ stack: true }), timestamp(), json()),
-  transports: MyTransports,
+  transports: createTransports(),
   exceptionHandlers: [
     new DailyRotateFile({
       level: 'info',
-      filename: path.join(logPath, 'exceptions-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d',
+      filename: LOG_CONFIG.paths.exceptions,
+      datePattern: LOG_CONFIG.datePattern,
+      maxFiles: LOG_CONFIG.maxFiles,
     }),
   ],
   rejectionHandlers: [
     new DailyRotateFile({
       level: 'info',
-      filename: path.join(logPath, 'rejections-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d',
+      filename: LOG_CONFIG.paths.rejections,
+      datePattern: LOG_CONFIG.datePattern,
+      maxFiles: LOG_CONFIG.maxFiles,
     }),
   ],
 });
@@ -215,13 +278,10 @@ const sequelizeDBActionsLogger = winston.createLogger({
   level: 'info',
   transports: [
     new DailyRotateFile({
-      filename: path.join(logPath, 'sequelize-db-actions-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      maxFiles: '14d',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        customFormat
-      ),
+      filename: LOG_CONFIG.paths.sequelize,
+      datePattern: LOG_CONFIG.datePattern,
+      maxFiles: LOG_CONFIG.maxFiles,
+      format: winston.format.combine(winston.format.timestamp(), customFormat),
     }),
   ],
 });
