@@ -1,0 +1,19 @@
+{
+  "name": "ui-theme",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/ui-theme/src",
+  "projectType": "library",
+  "tags": ["type:ui", "scope:hotel_management"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/ui-theme",
+        "main": "lib/ui-theme/src/index.ts",
+        "tsConfig": "lib/ui-theme/tsconfig.lib.json",
+        "assets": ["lib/ui-theme/*.md"]
+      }
+    }
+  }
+}

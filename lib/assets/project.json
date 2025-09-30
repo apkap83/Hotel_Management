@@ -1,0 +1,19 @@
+{
+  "name": "assets",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/assets/src",
+  "projectType": "library",
+  "tags": ["type:assets", "scope:hotel_management"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/assets",
+        "main": "lib/assets/src/index.ts",
+        "tsConfig": "lib/assets/tsconfig.lib.json",
+        "assets": ["lib/assets/*.md"]
+      }
+    }
+  }
+}

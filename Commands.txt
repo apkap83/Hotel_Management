@@ -54,14 +54,183 @@
   # Run script that Creates the  Database from Sequelize Models
   nx run scripts:db:create
 
-  # Generate auth-options library
-  npx nx generate @nx/js:library auth-options --directory=lib/auth-options
+  # Generate libraries with proper tags:
+  
+  # Assets library (images, fonts, static resources)
+  npx nx generate @nx/js:library assets --directory=lib/assets --tags type:assets,scope:hotel_management
+  
+  # Auth-options library (authentication configuration)
+  npx nx generate @nx/js:library auth-options --directory=lib/auth-options --tags type:config,scope:hotel_management
+
+  # Config library (application configuration)
+  npx nx generate @nx/js:library config --directory=lib/config --tags type:config,scope:hotel_management
+
+  # DB-access library (database access and ORM)
+  npx nx generate @nx/js:library db-access --directory=lib/db-access --tags type:data,scope:hotel_management
+
+  # Logging library (logging utilities)
+  npx nx generate @nx/js:library logging --directory=lib/logging --tags type:util,scope:hotel_management
+
+  # React-Hooks library (custom React hooks)
+  npx nx generate @nx/js:library react-hooks --directory=lib/react-hooks --tags type:util,scope:hotel_management
+
+  # Shared-models library (TypeScript interfaces and types)
+  npx nx generate @nx/js:library shared-models --directory=lib/shared-models --tags type:data,scope:hotel_management
+
+  # UI library (React components and styling)
+  nx g @nx/react:library ui --directory lib/ui --tags type:ui,scope:hotel_management
+  
+  # Utils library (general utility functions)
+  npx nx generate @nx/js:library utils --directory=lib/utils --tags type:util,scope:hotel_management
+
+  # Scripts library (build tools and database scripts)
+  npx nx generate @nx/js:library scripts --directory=scripts --tags type:tool,scope:hotel_management
 
 
+  # UI-Theme library 
+  npx nx generate @nx/js:library ui-theme --directory=lib/ui-theme --tags type:ui,scope:hotel_management --dry-run
+
+
+  # Context library 
+  npx nx generate @nx/js:library contexts --directory=lib/contexts --tags type:util,scope:hotel_management --dry-run
+
+
+ # Context library 
+  npx nx generate @nx/js:library contexts --directory=lib/contexts --tags type:util,scope:hotel_management --dry-run
+
+# Server Actions
+ nx g @nx/js:library server-actions --directory lib/server-actions --tags type:server,scope:hotel_management
+
+# =============================================================================
+# NX COMMANDS WITH TAGS
+# =============================================================================
+
+  # Run commands by type:
+  # =====================
+  
+  # Test only data-related libraries (db-access, shared-models)
+  nx run-many --target=test --projects=tag:type:data
+
+  # Test only utility libraries (logging, react-hooks, utils)
+  nx run-many --target=test --projects=tag:type:util
+
+  # Build only configuration libraries (config, auth-options)
+  nx run-many --target=build --projects=tag:type:config
+
+  # Lint only UI libraries
+  nx run-many --target=lint --projects=tag:type:ui
+
+  # Test only tool/script libraries
+  nx run-many --target=test --projects=tag:type:tool
+
+  # Build all asset libraries
+  nx run-many --target=build --projects=tag:type:assets
+
+  # Run commands by scope:
+  # =====================
+  
+  # Run tests for all hotel_management libraries
+  nx run-many --target=test --projects=tag:scope:hotel_management
+
+  # Build all hotel_management libraries  
+  nx run-many --target=build --projects=tag:scope:hotel_management
+
+  # Lint all hotel_management projects
+  nx run-many --target=lint --projects=tag:scope:hotel_management
+
+  # Combined tag filtering:
+  # ======================
+  
+  # Test only hotel_management data libraries
+  nx run-many --target=test --projects=tag:type:data,tag:scope:hotel_management
+
+  # Build only hotel_management utility libraries
+  nx run-many --target=build --projects=tag:type:util,tag:scope:hotel_management
+
+# =============================================================================
+# COMMON DEVELOPMENT COMMANDS
+# =============================================================================
+
+  # Development workflows:
+  # =====================
+
+  # Run all tests
+  nx run-many --all --target=test
+
+  # Run all tests in watch mode
+  nx run-many --all --target=test --watch
+
+  # Build all libraries
+  nx run-many --all --target=build
+
+  # Lint all projects
+  nx run-many --all --target=lint
+
+  # Serve the frontend application
+  nx serve hotel-frontend
+
+  # Serve frontend with turbo (faster builds)
+  nx serve hotel-frontend --turbo
+
+  # Run database creation script
+  nx run scripts:db:create
+
+  # Show project dependency graph
+  nx graph
+
+  # Show projects with specific tags
+  nx show projects --projects=tag:type:data
+  nx show projects --projects=tag:scope:hotel_management
+
+  # Show affected projects (after code changes)
+  nx affected:test
+  nx affected:build
+  nx affected:lint
+
+# =============================================================================
+# LIBRARY TAG STRUCTURE
+# =============================================================================
+
+  Current tagging structure:
+  
+  📁 Type Tags:
+  - type:assets      → Static resources (images, fonts, etc.)
+  - type:config      → Configuration libraries  
+  - type:data        → Data models and database access
+  - type:ui          → UI components and styling
+  - type:util        → Utility functions and helpers
+  - type:tool        → Build tools and scripts
+
+  🏢 Scope Tags:
+  - scope:hotel_management → All hotel management related code
+
+  📊 Current Library Classifications:
+  - assets         → type:assets,  scope:hotel_management
+  - auth-options   → type:config,  scope:hotel_management  
+  - config         → type:config,  scope:hotel_management
+  - db-access      → type:data,    scope:hotel_management
+  - logging        → type:util,    scope:hotel_management
+  - react-hooks    → type:util,    scope:hotel_management
+  - shared-models  → type:data,    scope:hotel_management
+  - ui             → type:ui,      scope:hotel_management
+  - utils          → type:util,    scope:hotel_management
+  - scripts        → type:tool,    scope:hotel_management
+
+# =============================================================================
+# PROJECT STRUCTURE
+# =============================================================================
 
   Current project structure:
-  - ✅ Nx workspace
-  - ✅ Next.js app (hotel-frontend)
-  - ✅ Config library (libs/config) with SWC bundler
-  - ✅ Database access library (libs/db-access) with SWC bundler
-  - ✅ Development server running
+  - ✅ Nx workspace with proper tagging system
+  - ✅ Next.js app (hotel-frontend) with Turbo support
+  - ✅ 10 libraries with proper type and scope tags
+  - ✅ Comprehensive test coverage (115+ tests)
+  - ✅ Database access library with Sequelize models
+  - ✅ Logging library with Winston and daily rotation
+  - ✅ Configuration management for dev/prod environments
+  - ✅ Asset management library
+  - ✅ Authentication options setup
+  - ✅ Shared TypeScript models and types
+  - ✅ UI component library ready for development
+  - ✅ Custom React hooks library
+  - ✅ Database creation and management scripts

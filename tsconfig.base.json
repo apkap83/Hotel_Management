@@ -15,13 +15,22 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@hotel_manage/admin-server-actions": [
+        "lib/admin-server-actions/src/index.ts"
+      ],
+      "@hotel_manage/server-actions": ["lib/server-actions/src/index.ts"],
+      "@hotel_manage/assets": ["lib/assets/src/index.ts"],
+      "@hotel_manage/auth-options": ["lib/auth-options/src/index.ts"],
       "@hotel_manage/config": ["lib/config/src/index.ts"],
+      "@hotel_manage/contexts": ["lib/contexts/src/index.ts"],
       "@hotel_manage/db-access": ["lib/db-access/src/index.ts"],
       "@hotel_manage/logging": ["lib/logging/src/index.ts"],
+      "@hotel_manage/react-hooks": ["lib/react-hooks/src/index.ts"],
       "@hotel_manage/scripts": ["scripts/src/index.ts"],
       "@hotel_manage/shared-models": ["lib/shared-models/src/index.ts"],
-      "@hotel_manage/utils": ["lib/utils/src/index.ts"],
-      "auth-options": ["lib/auth-options/src/index.ts"]
+      "@hotel_manage/ui": ["lib/ui/src/index.ts"],
+      "@hotel_manage/ui-theme": ["lib/ui-theme/src/index.ts"],
+      "@hotel_manage/utils": ["lib/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

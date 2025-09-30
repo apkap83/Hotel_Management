@@ -1,0 +1,19 @@
+{
+  "name": "react-hooks",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/react-hooks/src",
+  "projectType": "library",
+  "tags": ["type:util", "scope:hotel_management"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/react-hooks",
+        "main": "lib/react-hooks/src/index.ts",
+        "tsConfig": "lib/react-hooks/tsconfig.lib.json",
+        "assets": ["lib/react-hooks/*.md"]
+      }
+    }
+  }
+}

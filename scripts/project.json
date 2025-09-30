@@ -3,7 +3,7 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "scripts/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type:tool", "scope:hotel_management"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

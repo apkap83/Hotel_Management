@@ -1,0 +1,19 @@
+{
+  "name": "admin-server-actions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/admin-server-actions/src",
+  "projectType": "library",
+  "tags": ["type:server", "scope:hotel_management"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/admin-server-actions",
+        "main": "lib/admin-server-actions/src/index.ts",
+        "tsConfig": "lib/admin-server-actions/tsconfig.lib.json",
+        "assets": ["lib/admin-server-actions/*.md"]
+      }
+    }
+  }
+}

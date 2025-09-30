@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "lib/db-access/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["type:data", "scope:hotel_management"],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",

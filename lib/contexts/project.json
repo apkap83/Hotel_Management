@@ -1,0 +1,19 @@
+{
+  "name": "contexts",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/contexts/src",
+  "projectType": "library",
+  "tags": ["type:util", "scope:hotel_management"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/lib/contexts",
+        "main": "lib/contexts/src/index.ts",
+        "tsConfig": "lib/contexts/tsconfig.lib.json",
+        "assets": ["lib/contexts/*.md"]
+      }
+    }
+  }
+}
