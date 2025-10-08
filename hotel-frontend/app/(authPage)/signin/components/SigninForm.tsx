@@ -254,13 +254,10 @@ export default function SignInForm({
 
   return (
     <div
-      className={`${styles.loginRectangle} w-[500px] relative shadow-md rounded-2xl flex flex-col justify-center 
+      className={`${styles.loginRectangle}  w-[500px] opacity-50 relative shadow-md rounded-2xl flex flex-col justify-center 
       items-center p-7  backdrop-blur-lg bg-gray-100 border border-[#26295375]
 
       `}
-      style={{
-        transform: 'translateY(-20%)',
-      }}
     >
       <div className={`w-[300px] mb-2`}>
         <div
@@ -277,17 +274,12 @@ export default function SignInForm({
               bg-gradient-to-r from-gray-500 via-gray-600 to-gray-800 bg-clip-text text-transparent
           `}
         >
-          <Image
-            priority
-            src={NovaLogo}
-            alt={'Nova Logo'}
-            width={250}
-            height={100}
-            className="w-[250px]"
-          />
-          <span>Platinum Support</span>
+          <h1 className="text-6xl bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            ManHost
+          </h1>
+          <span>Management Platform</span>
         </div>
-        {process.env['NEXT_PUBLIC_APP_ENV'] === 'staging' &&
+        {/* {process.env['NEXT_PUBLIC_APP_ENV'] === 'staging' &&
           process.env['NODE_ENV'] === 'production' && (
             <div className="flex items-center justify-center h-12 ">
               <div className="px-2 opacity-80 text-center text-lg text-pink-900 border border-dashed border-pink-900 mx-auto h-auto shadow-white shadow-sm">
@@ -301,7 +293,7 @@ export default function SignInForm({
               Development Environment
             </div>
           </div>
-        )}
+        )} */}
         <div
           className={clsx('text-xl  mt-[.75rem] text-[black] font-semibold', {
             'text-center': title === 'Please Change Your Password',

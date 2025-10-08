@@ -39,14 +39,10 @@ export default async function RootLayout({
           <CssBaseline />
           <AppRouterCacheProvider>
             <AppThemeProvider>
-              <ToastProvider>
-                <WebSocketWrapper>
-                  <main className="mt-[0] mb-[49.92px] sm:mt-[75.2px]">
-                    {children}
-                  </main>
-                </WebSocketWrapper>
-                <CookieConsentBanner />
-              </ToastProvider>
+              <main className="mt-[0] mb-[49.92px] sm:mt-[75.2px]">
+                {children}
+              </main>
+              <CookieConsentBanner />
             </AppThemeProvider>
           </AppRouterCacheProvider>
           {/* </StyledComponentsRegistry> */}

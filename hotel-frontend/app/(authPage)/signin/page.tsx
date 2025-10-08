@@ -27,7 +27,9 @@ export default async function SignIn({ searchParams }: { searchParams: any }) {
         // className="blur-sm"
         style={{ objectFit: 'cover' }}
       />
-      <SignInForm csrfToken={csrfToken} />
+      <div className="inset-0 absolute flex justify-center items-center z-10">
+        <SignInForm csrfToken={csrfToken} />
+      </div>
     </>
   );
 }
